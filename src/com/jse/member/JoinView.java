@@ -5,13 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Savepoint;
 public class JoinView extends JFrame implements ActionListener {
-	JButton savebutton;
-	JButton cancelbutton;
+	JButton savebutton,cancelbutton,listbutton;
 	JTextField namefield, useridfield, passwordfield,ssnlabelfield;
 	JLabel label,namelabel,useridlabel,passwordlabel,ssnlabel;
 	JLabel[] labels;
 	JPanel panel;
 	JTextField[] jTextFields;
+	JTextArea jTextArea;
 	MemberService memberService;
 		public JoinView() {
 			memberService =new MemberServiceImpl();
@@ -19,43 +19,55 @@ public class JoinView extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	
 	public void open() {
+			
+		this.setSize(800,600);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JLabel lblJoin = new JLabel("회원가입");
+		lblJoin.setBounds(159, 41, 101, 20);
+		this.add(lblJoin);
+		panel = new JPanel();
+		panel.setLayout(new FlowLayout());
+		String[] names = {"이름","아이디","패스워드","주민등록번호","주소","검색결과"};
+		labels = new JLabel[6];
+		jTextFields = new JTextField[6];
+		jTextArea = new JTextArea();
+		for (int i=0;i<names.length;i++) {
+			labels[i] = new JLabel(names[i]);
+			this.add(labels[i]);
+			jTextFields[i] = new JTextField();
+			this.add(jTextFields[i]);
+		}
+		this.add(jTextArea);
+		label = new JLabel("회원가입");
+		savebutton = new JButton("저장");
+		listbutton = new JButton("목록");
+		cancelbutton = new JButton("취소");
 		
-	this.setSize(800,600);
-	this.setLocationRelativeTo(null);
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	JLabel lblJoin = new JLabel("회원가입");
-	lblJoin.setBounds(159, 41, 101, 20);
-	this.add(lblJoin);
-	panel = new JPanel();
-	panel.setLayout(new FlowLayout());
-	String[] names = {"이름","아이디","패스워드","주민등록번호"};
-	labels = new JLabel[5];
-	jTextFields = new JTextField[5];
-	for (int i=0;i<names.length;i++) {
-		labels[i] = new JLabel(names[i]);
-		this.add(labels[i]);
-		jTextFields[i] = new JTextField();
-		this.add(jTextFields[i]);
-	}
-	label = new JLabel("회원가입");
-	savebutton = new JButton("저장");
-	cancelbutton = new JButton("취소");
-	savebutton.addActionListener(this);
-	cancelbutton.addActionListener(this);
-	this.add(savebutton);
-	this.add(cancelbutton);
-	this.add(panel);
-	labels[0].setBounds(69, 113, 69, 20);
-	labels[1].setBounds(69, 163, 69, 20);
-	labels[2].setBounds(69, 210, 69, 20);
-	labels[3].setBounds(69, 250, 80, 40);
-	jTextFields[0].setBounds(159, 156, 186, 35);
-	jTextFields[1].setBounds(159, 106, 186, 35);
-	jTextFields[2].setBounds(159, 203, 186, 35);
-	jTextFields[3].setBounds(159, 253, 186, 35);
-	savebutton.setBounds(159, 363, 70, 29);
-	cancelbutton.setBounds(300, 363, 70, 29);
-	this.setVisible(true);
+		savebutton.addActionListener(this);
+		listbutton.addActionListener(this);
+		cancelbutton.addActionListener(this);
+		this.add(savebutton);
+		this.add(listbutton);
+		this.add(cancelbutton);
+		this.add(panel);
+		
+		labels[0].setBounds(69, 113, 69, 20);
+		labels[1].setBounds(69, 163, 69, 20);
+		labels[2].setBounds(69, 210, 69, 20);
+		labels[3].setBounds(69, 250, 80, 40);
+		labels[4].setBounds(69, 300, 80, 40);
+		labels[5].setBounds(350, 113, 80, 20);
+		jTextFields[0].setBounds(159, 156, 186, 35);
+		jTextFields[1].setBounds(159, 106, 186, 35);
+		jTextFields[2].setBounds(159, 203, 186, 35);
+		jTextFields[3].setBounds(159, 253, 186, 35);
+		jTextFields[4].setBounds(159, 300, 186, 35);
+		jTextArea.setBounds(450, 113, 250, 350);
+		savebutton.setBounds(159, 363, 70, 29);
+		cancelbutton.setBounds(250, 363, 70, 29);
+		listbutton.setBounds(350, 363, 70, 29);
+		this.setVisible(true);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -65,32 +77,49 @@ public class JoinView extends JFrame implements ActionListener {
 			jTextFields[1].setText("hong,you,lee,shin,do");
 			jTextFields[2].setText("1,1,1,1,1");
 			jTextFields[3].setText("900101-1,910120-2,980120-1,930120-1,000103-3");
-			JOptionPane.showMessageDialog(this,String.format("%s / %s / %s / %s ", 
+			jTextFields[4].setText("서울,서울,서울,부산,부산");
+			
+//			JOptionPane.showMessageDialog(this,String.format("%s / %s / %s / %s / %s", 
+//					jTextFields[0].getText(),
+//					jTextFields[1].getText(),
+//					jTextFields[2].getText(),
+//					jTextFields[3].getText(),
+//					jTextFields[4].getText()));
+			
+			String data = String.format("%s / %s / %s / %s / %s", 
 					jTextFields[0].getText(),
 					jTextFields[1].getText(),
 					jTextFields[2].getText(),
-					jTextFields[3].getText()));
-			String[] data = String.format("%s / %s / %s / %s", 
-					jTextFields[0].getText(),
-					jTextFields[1].getText(),
-					jTextFields[2].getText(),
-					jTextFields[3].getText()).split("/"); 
-		
-			String[] names = data[0].split(",");
-			String[] ids = data[1].split(",");
-			String[] pws = data[2].split(",");
-			String[] ssns = data[3].split(",");
-			memberService.add(new Member(names[0],ids[0],pws[0],ssns[0]));
+					jTextFields[3].getText(),
+					jTextFields[4].getText()); 
 			
-			// 각 스플릿을 통해 담는다.
+			String[] arr = data.split("/");
+			Member[] members = new Member[5];
+			String[] names = arr[0].split(",");
+			String[] userids = arr[1].split(",");
+			String[] passwords = arr[2].split(",");
+			String[] ssns = arr[3].split(",");
+			String[] addrs = arr[4].split(",");
 			
-			
-			Member[] members = memberService.getMemebers();
-			for(int i=0;i < members.length; i++) {
-				System.out.println(members[i].toString());
+			for(int i=0;i<names.length;i++) {
+				members[i] = new Member();
+				members[i].setName(names[i]);
+				members[i].setUserid(userids[i]);
+				members[i].setPasswd(passwords[i]);
+				members[i].setSsn(ssns[i]);
+				members[i].setAddr(addrs[i]);
+				memberService.add(members[i]);
 			}
-		}else if(e.getSource() == cancelbutton) {
 			
+		}else if(e.getSource() == listbutton) {
+			Member[] members = memberService.getMemebers();
+			String add = "";
+			for(int i=0;i<members.length;i++) {
+				add += members[i]+"\n";
+			}
+			jTextArea.setText(add);
+		}else if(e.getSource() == cancelbutton) {
+			System.exit(0);;
 		}
 	}
 }
